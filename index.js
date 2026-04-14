@@ -58,11 +58,28 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    const { ObjectId } = require("mongodb");
+
     app.get("/products/:id", async (req, res) => {
-      const id = req.params.id;
-      const querry = { _id: new ObjectId(id) };
-      const result = await productsCollection.findOne(querry);
-      res.send(result);
+      try {
+        const id = req.params.id;
+
+        // check valid ObjectId
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).send({ error: "Invalid ID" });
+        }
+
+        const query = { _id: id };
+        const result = await productsCollection.findOne(query);
+
+        if (!result) {
+          return res.status(404).send({ error: "Product not found" });
+        }
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Server error" });
+      }
     });
     //bids releted api
     app.get("/bids", async (req, res) => {
@@ -73,6 +90,18 @@ async function run() {
         querry.buyer_email = email;
       }
       const cursor = bidsCollection.find(querry);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.post("/bids", async (req, res) => {
+      const newBids = req.body;
+      const result = await bidsCollection.insertOne(newBids);
+      res.send(result);
+    });
+    app.get("/products/bids/:productId", async (req, res) => {
+      const productId = req.params.productId;
+      const querry = { product: productId };
+      const cursor = bidsCollection.find(querry).sort({ bids_price: -1 });
       const result = await cursor.toArray();
       res.send(result);
     });

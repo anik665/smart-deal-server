@@ -105,6 +105,12 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    app.delete("/bids/:id", async (req, res) => {
+      const id = req.params.id;
+      const querry = { _id: new ObjectId(id) };
+      const result = await bidsCollection.deleteOne(querry);
+      res.send(result);
+    });
     // latest products apis
     app.get("/latest-products", async (req, res) => {
       const cursor = productsCollection

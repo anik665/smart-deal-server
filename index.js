@@ -3,14 +3,17 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
+require("dotenv").config();
+// console.log(process.env);
 
 //midelwere
 app.use(cors());
 app.use(express.json());
 
 //mongodb
-const uri =
-  "mongodb+srv://smart-deal:gF.cxM2f5DPq8Yk@cluster0.p8lzuaz.mongodb.net/smartDealDB?retryWrites=true&w=majority";
+// const uri =
+//   "mongodb+srv://smart-deal:gF.cxM2f5DPq8Yk@cluster0.p8lzuaz.mongodb.net/smartDealDB?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.p8lzuaz.mongodb.net/smartDealDB?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
   serverApi: {

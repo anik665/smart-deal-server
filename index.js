@@ -10,8 +10,11 @@ require("dotenv").config();
 
 //firebase admin sdk
 
-const serviceAccount = require("./smart-deal-ee1ad-firebase-adminsdk-fbsvc-913f32b252.json");
-
+// index.js
+const decoded = Buffer.from(process.env.FIREBASE_KEY, "base64").toString(
+  "utf8",
+);
+const serviceAccount = JSON.parse(decoded);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -247,6 +250,6 @@ run();
 app.get("/", (req, res) => {
   res.send("Smart deal is  running on the port 3000");
 });
-app.listen(port, () => {
-  console.log(`Smart deal is running on  port : ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Smart deal is running on  port : ${port}`);
+// });

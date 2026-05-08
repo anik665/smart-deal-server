@@ -150,35 +150,35 @@ async function run() {
     });
     //bids releted api
 
-    app.get("/bids", verifieJwtToken, async (req, res) => {
-      const email = req.query.email;
-      const querry = {};
-      if (email) {
-        querry.buyer_email = email;
-      }
-      if (email !== req.token_email) {
-        return res.status(403).send({ message: "forbiddne access" });
-      }
-      const cursor = bidsCollection.find(querry);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-
-    // app.get("/bids", logger, verifyFirebaseAccessTolken, async (req, res) => {
-    //   // console.log("headers", req.headers);
+    // app.get("/bids", verifieJwtToken, async (req, res) => {
     //   const email = req.query.email;
-    //   console.log(email);
     //   const querry = {};
     //   if (email) {
-    //     if (email !== req.token_email) {
-    //       res.status(403).send({ message: "Forbiden" });
-    //     }
     //     querry.buyer_email = email;
+    //   }
+    //   if (email !== req.token_email) {
+    //     return res.status(403).send({ message: "forbiddne access" });
     //   }
     //   const cursor = bidsCollection.find(querry);
     //   const result = await cursor.toArray();
     //   res.send(result);
     // });
+
+    app.get("/bids", logger, verifyFirebaseAccessTolken, async (req, res) => {
+      // console.log("headers", req.headers);
+      const email = req.query.email;
+      console.log(email);
+      const querry = {};
+      if (email) {
+        if (email !== req.token_email) {
+          return res.status(403).send({ message: "Forbiden" });
+        }
+        querry.buyer_email = email;
+      }
+      const cursor = bidsCollection.find(querry);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     app.post("/bids", async (req, res) => {
       const newBids = req.body;
       const result = await bidsCollection.insertOne(newBids);
@@ -213,7 +213,7 @@ async function run() {
       res.send(result);
     });
 
-    app.post("/products", async (req, res) => {
+    app.post("/products", verifyFirebaseAccessTolken, async (req, res) => {
       const newProducts = req.body;
       const result = await productsCollection.insertOne(newProducts);
       res.send(result);

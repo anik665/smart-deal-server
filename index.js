@@ -250,6 +250,5 @@ run();
 app.get("/", (req, res) => {
   res.send("Smart deal is  running on the port 3000");
 });
-// app.listen(port, () => {
-//   console.log(`Smart deal is running on  port : ${port}`);
-// });
+// v
+module.exports = app;
